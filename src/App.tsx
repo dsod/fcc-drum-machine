@@ -53,6 +53,10 @@ class DrumMachine extends React.Component<{}, DrumMachineState> {
     });
   }
 
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleKeyDown);
+  }
+
   handleKeyDown = (e: KeyboardEvent) => {
     const drumPad = this.state.drumPads.filter(
       (x) => x.hotkey === e.key.toUpperCase()
