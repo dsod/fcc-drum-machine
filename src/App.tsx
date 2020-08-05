@@ -85,14 +85,13 @@ class DrumMachine extends React.Component<{}, DrumMachineState> {
   render() {
     return (
       <div className="App">
-        <div id="drum-machine">
+        <div id="drum-machine" className="drum-container">
           <Display struckDrumName={this.state.struckDrumName} />
-          {this.state.drumPads.map((drum) => (
-            <DrumPad
-              drumPads={drum}
-              setLastStruckedDrum={this.setLastStruckedDrum}
-            />
-          ))}
+          <div className="drum-pads">
+            {this.state.drumPads.map((drum) => (
+              <DrumPad drumPads={drum} setLastStruckedDrum={this.setLastStruckedDrum} />
+            ))}
+          </div>
         </div>
       </div>
     );
