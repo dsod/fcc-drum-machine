@@ -7,6 +7,7 @@ export type DrumPadType = {
   audioSrc: string;
   name: string;
   hotkey: string;
+  keyCode: number;
 };
 
 type DrumMachineState = {
@@ -18,55 +19,61 @@ class DrumMachine extends React.Component<{}, DrumMachineState> {
   state = {
     struckDrumName: "Play a drum...",
     drumPads: [
-      { audioSrc: "./audio/Hi Hats 1.wav", name: "Hi Hat 1", hotkey: "Q" },
-      { audioSrc: "./audio/Hi Hats 2.wav", name: "Hi Hat 2", hotkey: "W" },
-      { audioSrc: "./audio/Hi Hats 3.wav", name: "Hi Hat 3", hotkey: "E" },
+      {
+        audioSrc: "./audio/Hi Hats 1.wav",
+        name: "Hi Hat 1",
+        hotkey: "Q",
+        keyCode: 81,
+      },
+      {
+        audioSrc: "./audio/Hi Hats 2.wav",
+        name: "Hi Hat 2",
+        hotkey: "W",
+        keyCode: 87,
+      },
+      {
+        audioSrc: "./audio/Hi Hats 3.wav",
+        name: "Hi Hat 3",
+        hotkey: "E",
+        keyCode: 69,
+      },
       {
         audioSrc: "./audio/Snare Drum 1.wav",
         name: "Snare Drum 1",
         hotkey: "A",
+        keyCode: 65,
       },
       {
         audioSrc: "./audio/Snare Drum 2.wav",
         name: "Snare Drum 2",
         hotkey: "S",
+        keyCode: 83,
       },
-      { audioSrc: "./audio/Clap 1.wav", name: "Clap 1", hotkey: "D" },
-      { audioSrc: "./audio/Clap 2.wav", name: "Clap 2", hotkey: "Z" },
+      {
+        audioSrc: "./audio/Clap 1.wav",
+        name: "Clap 1",
+        hotkey: "D",
+        keyCode: 68,
+      },
+      {
+        audioSrc: "./audio/Clap 2.wav",
+        name: "Clap 2",
+        hotkey: "Z",
+        keyCode: 90,
+      },
       {
         audioSrc: "./audio/Bass Drum 1.wav",
         name: "Bass Drum 1",
         hotkey: "X",
+        keyCode: 88,
       },
       {
         audioSrc: "./audio/Bass Drum 2.wav",
         name: "Bass Drum 2",
         hotkey: "C",
+        keyCode: 67,
       },
     ],
-  };
-
-  componentWillMount() {
-    // Using Vanilla JS to handle keybindings since my use-case are simple, instead of a react specific library
-    document.addEventListener("keydown", (e: KeyboardEvent) => {
-      this.handleKeyDown(e);
-    });
-  }
-
-  componentWillUnmount() {
-    document.removeEventListener("keydown", this.handleKeyDown);
-  }
-
-  handleKeyDown = (e: KeyboardEvent) => {
-    const drumPad = this.state.drumPads.filter(
-      (x) => x.hotkey === e.key.toUpperCase()
-    );
-    if (drumPad.length) {
-      const audioSrc: string | null = drumPad[0].audioSrc;
-      const drumName: string | null = drumPad[0].name;
-      this.playAudio(audioSrc);
-      this.setLastStruckedDrum(drumName);
-    }
   };
 
   setLastStruckedDrum = (drumName: string) => {
@@ -75,22 +82,17 @@ class DrumMachine extends React.Component<{}, DrumMachineState> {
     });
   };
 
-  playAudio = (src: string | null) => {
-    if (src) {
-      new Audio(src).play();
-    }
-  };
-
   render() {
     return (
       <div className="App">
         <div id="drum-machine">
           <Display struckDrumName={this.state.struckDrumName} />
-          <DrumPad
-            drumPads={this.state.drumPads}
-            playAudio={this.playAudio}
-            setLastStruckedDrum={this.setLastStruckedDrum}
-          />
+          {this.state.drumPads.map((drum) => (
+            <DrumPad
+              drumPads={drum}
+              setLastStruckedDrum={this.setLastStruckedDrum}
+            />
+          ))}
         </div>
       </div>
     );
